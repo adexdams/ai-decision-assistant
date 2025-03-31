@@ -1,4 +1,6 @@
 # frontend/ui.py
+import sys
+sys.path.append(".")
 import streamlit as st
 from backend.secretary import Secretary
 from backend.expert_manager import select_experts
