@@ -1,12 +1,9 @@
 # backend/secretary.py
 import os
 import json
-from openai import OpenAI
+import openai
 from backend.expert_manager import select_experts
-
-# Load OpenAI API key and instantiate client
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=OPENAI_API_KEY)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Make sure the OpenAI API key is loaded (if not already done in another module)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
