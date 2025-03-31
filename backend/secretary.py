@@ -3,12 +3,12 @@ import os
 import json
 import openai
 from backend.expert_manager import select_experts
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Make sure the OpenAI API key is loaded (if not already done in another module)
+# Set OpenAI API key from environment
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY is not set in the environment!")
+openai.api_key = OPENAI_API_KEY
 
 
 class Secretary:
