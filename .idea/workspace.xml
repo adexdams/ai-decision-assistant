@@ -101,7 +101,6 @@
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="OPENAI_API_KEY" value="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" />
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
