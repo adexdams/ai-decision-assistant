@@ -112,13 +112,20 @@ with cols[0]:
         except AttributeError:
             st.markdown("<script>window.location.reload();</script>", unsafe_allow_html=True)
 with cols[1]:
-    if st.button("Join Waitlist", key="waitlist_button"):
-        logging.info("User clicked Join Waitlist")
-        components.html("""
-            <script>
-                window.location.href = "https://sites.google.com/view/summonexperts/home";
-            </script>
-        """, height=0)
+    st.markdown("""
+    <div style="text-align:right;">
+      <a href="https://sites.google.com/view/summonexperts/home" target="_blank" style="
+         background-color: red; 
+         color: white; 
+         padding: 10px 20px; 
+         font-size: 16px; 
+         border: none; 
+         border-radius: 5px; 
+         text-decoration: none;
+         display: inline-block;
+      ">Join Waitlist</a>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # Sidebar: "Join Waitlist" button at the very top, above the overview content.
