@@ -113,19 +113,8 @@ with cols[0]:
             st.markdown("<script>window.location.reload();</script>", unsafe_allow_html=True)
 with cols[1]:
     st.markdown("""
-    <div style="text-align:right;">
-      <a href="https://sites.google.com/view/summonexperts/home" target="_blank" style="
-            background-color: red; 
-            color: white; 
-            padding: 10px 20px; 
-            font-size: 16px; 
-            border: none; 
-            border-radius: 5px; 
-            text-decoration: none;
-            display: inline-block;
-        " 
-        onmouseover="this.style.backgroundColor='#ffffff'; this.style.color='red'; this.style.border='1px solid red';"
-        onmouseout="this.style.backgroundColor='red'; this.style.color='white'; this.style.border='none';">
+    <div class="waitlist-button", style="text-align:right;">
+      <a href="https://sites.google.com/view/summonexperts/home" target="_blank">
             Join Waitlist
         </a>
     </div>
