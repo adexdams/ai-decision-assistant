@@ -8,10 +8,6 @@ from backend.ai_processing import generate_expert_discussion, generate_extra_fol
 import logging
 import streamlit.components.v1 as components
 
-# Navigation logic - check session state to determine which page to display.
-if "page" not in st.session_state:
-    st.session_state["page"] = "chat"
-
 
 logging.basicConfig(
     filename="ui.log",
@@ -103,33 +99,24 @@ st.markdown("""
 
 
 # Top-right button section using st.columns for side-by-side buttons
-cols = st.columns(2)
-with cols[0]:
-    if st.button("Start New Meeting", key="start_new_meeting"):
-        st.session_state.clear()
-        try:
-            st.experimental_rerun()
-        except AttributeError:
-            st.markdown("<script>window.location.reload();</script>", unsafe_allow_html=True)
-with cols[1]:
-    st.markdown("""
-    <div style="text-align:right;">
-      <a href="https://sites.google.com/view/summonexperts/home" target="_blank" style="
-            background-color: red; 
-            color: white; 
-            padding: 10px 20px; 
-            font-size: 16px; 
-            border: none; 
-            border-radius: 5px; 
-            text-decoration: none;
-            display: inline-block;
-        " 
-        onmouseover="this.style.backgroundColor='#ffffff'; this.style.color='red'; this.style.border='1px solid red';"
-        onmouseout="this.style.backgroundColor='red'; this.style.color='white'; this.style.border='none';">
-            Join Waitlist
-        </a>
-    </div>
-    """, unsafe_allow_html=True)
+st.markdown("""
+<div style="text-align:right;">
+  <a href="https://sites.google.com/view/summonexperts/home" target="_blank" style="
+        background-color: red; 
+        color: white; 
+        padding: 10px 20px; 
+        font-size: 16px; 
+        border: none; 
+        border-radius: 5px; 
+        text-decoration: none;
+        display: inline-block;
+    " 
+    onmouseover="this.style.backgroundColor='#ffffff'; this.style.color='red'; this.style.border='1px solid red';"
+    onmouseout="this.style.backgroundColor='red'; this.style.color='white'; this.style.border='none';">
+        Join Waitlist
+    </a>
+</div>
+""", unsafe_allow_html=True)
 
 
 # Sidebar: "Join Waitlist" button at the very top, above the overview content.
