@@ -1,4 +1,4 @@
-# SummonExperts – AI-Driven Decision-Making Assistant
+# SummonExperts: An AI-Driven Decision-Making Partner
 
 Summons is an AI-powered decision-making partner designed for small business owners and aspiring founders. It helps users tackle complex business challenges by simulating a meeting with a board of expert advisors. The system interactively gathers essential context, selects relevant experts, and generates a simulated expert discussion along with strategic recommendations—all powered by OpenAI's GPT models.
 
@@ -9,7 +9,8 @@ Summons is an AI-powered decision-making partner designed for small business own
   - **Problem:** What is the challenge or contention?
   - **Persona:** What is your role in the situation?
   - **Objective:** What do you want to achieve?
-  - **Scenario:** How and where did the situation occur?
+  - **Scenario:** How did the situation occur?
+  - **Geography:** Where did the situation occur?
   - **Constraints:** What resources are available (financial, human, time, technology)?
   - Optionally, additional specialty-related background is gathered if needed.
 
