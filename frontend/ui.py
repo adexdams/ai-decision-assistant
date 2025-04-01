@@ -123,7 +123,7 @@ st.markdown("""
 with st.sidebar:
     st.title("Overview")
     st.write("""
-        **Welcome! This is an AI-driven Decision-Making Assistant**
+        **Welcome! This is an AI-driven Decision-Making Partner**
 
         It is designed to help small business owners and aspiring founders tackle 
         business challenges by gathering a meeting of experts to provide personalized strategic recommendations.
