@@ -14,7 +14,7 @@ openai.api_key = OPENAI_API_KEY
 class Secretary:
     def __init__(self):
         # Essential fields we need for context
-        self.required_fields = ["problem", "persona", "objective", "scenario", "constraints"]
+        self.required_fields = ["problem", "persona", "objective", "scenario", "geography", "constraints"]
         # Initialize context as an empty dictionary
         self.context = {}
         # Count of dynamic context questions already asked
@@ -29,7 +29,7 @@ class Secretary:
         """
         prompt = f"""
 You are a business assistant evaluating if all essential information is provided.
-The essential fields are: Problem, Persona, Objective, Scenario, and Constraints.
+The essential fields are: Problem, Persona, Objective, Scenario, Geography, and Constraints.
 Here is the current context:
 {json.dumps(self.context, indent=2)}
 
@@ -63,7 +63,7 @@ List any missing fields (if multiple, separate them with commas). If all require
         """
         prompt = f"""
 You are a business doctor helping a small business owner understand their problem.
-The essential information needed includes: Problem, Persona, Objective, Scenario, and Constraints.
+The essential information needed includes: Problem, Persona, Objective, Scenario, Geography, and Constraints.
 The current context is:
 {json.dumps(self.context, indent=2)}
 
