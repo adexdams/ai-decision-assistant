@@ -10,10 +10,6 @@ import logging
 # Navigation logic - check session state to determine which page to display.
 if "page" not in st.session_state:
     st.session_state["page"] = "chat"
-if st.session_state["page"] == "waitlist":
-    from frontend.waitlist import main as waitlist_main  # Updated path for your waitlist page
-    waitlist_main()
-    st.stop()
 
 
 logging.basicConfig(
@@ -125,12 +121,7 @@ with cols[1]:
     """, unsafe_allow_html=True)
     if st.button("Join Waitlist", key="waitlist_button"):
         logging.info("User clicked Join Waitlist")
-        st.session_state["page"] = "waitlist"
-        try:
-            st.experimental_rerun()
-        except AttributeError:
-            st.write("Click once more to navigate to the waitlist page.")
-            st.markdown("<script>window.location.reload();</script>", unsafe_allow_html=True)
+        st.markdown("<script>window.location.href='https://sites.google.com/view/summonexperts/home';</script>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 
