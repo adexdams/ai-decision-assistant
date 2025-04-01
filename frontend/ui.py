@@ -96,6 +96,10 @@ st.markdown("""
         
         /* Dark mode styling - placed after default styling */
         @media (prefers-color-scheme: dark) {
+            [data-testid="stSidebar"] {
+                background-color: #333 !important;
+                color: #f0f0f0 !important;
+            }
             .message-box {
                 border: 1px solid #555 !important;
                 background-color: #333 !important;
@@ -110,9 +114,8 @@ st.markdown("""
             .role-label {
                 color: #fff !important;
             }
-            [data-testid="stSidebar"] {
-                background-color: #333 !important;
-                color: #f0f0f0 !important;
+            .top-buttons button {
+                color: #fff !important;
             }
         }
     </style>
