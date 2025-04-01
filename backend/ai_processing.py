@@ -76,7 +76,7 @@ For each of the three strategic choices, include:
 2. A detailed assessment of the risks and rewards, including both the upside and the downside. Also mention what would need to happen for each option to fail.
 3. A discussion of the leadership style required to execute this choice.
 4. A description of the value system and personality traits of a person who would choose this option (for example, risk-taking, conservative, community-oriented, religious, etc.).
-5. Draw a 2v2 decision matrix table or quadrant map of impact vs risk for each choice.
+5. Draw a 2v2 decision quadrant table of impact vs risk for all strategic options.
 6. Highlight the preferred option with a top-down explanation of its expected impact.
 
 
