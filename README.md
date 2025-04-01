@@ -20,7 +20,7 @@ Summons is an AI-powered decision-making partner designed for small business own
   - An extra follow-up functionality for one additional clarification question, yielding a targeted expert response.
 
 - **Waitlist & Monetization:**  
-  Users who have exhausted their meeting sessions can join a waitlist (with email collection) and optionally opt for priority access via Stripe integration.
+  Users who have exhausted their meeting sessions can join a waitlist and optionally opt for priority access via Stripe integration.
 
 - **Logging & Analytics:**  
   Basic logging is incorporated to track user actions and waitlist sign-ups, helping you analyze usage and performance.
