@@ -19,99 +19,102 @@ logging.basicConfig(
 # Custom CSS styling for simplified message boxes and sidebar navigation
 st.markdown("""
     <style>
-    /* Dark mode styling */
-    @media (prefers-color-scheme: dark) {
+        /* Default styling */
+        [data-testid="stSidebar"] {
+            background-color: #F5F5F5 !important;
+            color: #333 !important;
+        }
+        
         .message-box {
-            border: 1px solid #555;
-            background-color: #333;
-            color: #f0f0f0;
+            border: 1px solid #e6e6e6;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+            white-space: normal;
         }
+        
         .message-box.message-right {
-            background-color: #444;
+            background-color: #e6e6e6;
         }
+        
         .message-box.message-left {
-            background-color: #222;
+            background-color: #ffffff;
         }
+        
         .role-label {
-            color: #fff;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-    }
-    
-    /* Sidebar styling: light gray background */
-    [data-testid="stSidebar"] {
-        background-color: #F5F5F5 !important;
-        color: #333 !important;
-    }
-
-    /* Message box styling */
-    .message-box {
-        border: 1px solid #e6e6e6;
-        border-radius: 8px;
-        padding: 10px;
-        margin-bottom: 10px;
-        max-width: 80%;
-        word-wrap: break-word;
-        white-space: normal;
-    }
-
-    /* Background colors based on alignment */
-    .message-box.message-right {
-        background-color: #e6e6e6;
-    }
-
-    .message-box.message-left {
-        background-color: #ffffff;
-    }
-
-    /* Role label styling */
-    .role-label {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    /* Alignment for user messages */
-    .message-right {
-        text-align: right;
-        margin-left: auto;
-    }
-
-    /* Alignment for system messages */
-    .message-left {
-        text-align: left;
-        margin-right: auto;
-    }
-
-    /* Styling for the top-right buttons in the sidebar */
-    .top-buttons {
-        text-align: right;
-        margin-bottom: 10px;
-    }
-    .top-buttons button {
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    .start-button {
-        background-color: #dddddd;
-        color: #000;
-    }
-    .waitlist-button {
-        background-color: red;
-        color: white;
-        margin-left: 10px;
-    }
-    .start-button:hover {
-        border: 1px solid #dddddd;
-        background-color: #ffffff;
-    }
-    .waitlist-button:hover {
-        border: 1px solid red;
-        color: red;
-        background-color: #ffffff;
-    }
+        
+        .message-right {
+            text-align: right;
+            margin-left: auto;
+        }
+        
+        .message-left {
+            text-align: left;
+            margin-right: auto;
+        }
+        
+        .top-buttons {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        
+        .top-buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .start-button {
+            background-color: #dddddd;
+            color: #000;
+        }
+        
+        .waitlist-button {
+            background-color: red;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .start-button:hover {
+            border: 1px solid #dddddd;
+            background-color: #ffffff;
+        }
+        
+        .waitlist-button:hover {
+            border: 1px solid red;
+            color: red;
+            background-color: #ffffff;
+        }
+        
+        /* Dark mode styling - placed after default styling */
+        @media (prefers-color-scheme: dark) {
+            .message-box {
+                border: 1px solid #555 !important;
+                background-color: #333 !important;
+                color: #f0f0f0 !important;
+            }
+            .message-box.message-right {
+                background-color: #444 !important;
+            }
+            .message-box.message-left {
+                background-color: #222 !important;
+            }
+            .role-label {
+                color: #fff !important;
+            }
+            [data-testid="stSidebar"] {
+                background-color: #333 !important;
+                color: #f0f0f0 !important;
+            }
+        }
     </style>
 """, unsafe_allow_html=True)
 
