@@ -114,15 +114,7 @@ with cols[0]:
 with cols[1]:
     st.markdown("""
     <div style="text-align:right;">
-      <a href="https://sites.google.com/view/summonexperts/home" target="_blank" style="
-         background-color: red; 
-         color: white; 
-         padding: 10px 20px; 
-         font-size: 16px; 
-         border: none; 
-         border-radius: 5px; 
-         text-decoration: none;
-         display: inline-block;
+      <a href="https://sites.google.com/view/summonexperts/home" target="_blank" class="waitlist-button"
       ">Join Waitlist</a>
     </div>
     """, unsafe_allow_html=True)
