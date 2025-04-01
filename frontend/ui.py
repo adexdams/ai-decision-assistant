@@ -19,6 +19,24 @@ logging.basicConfig(
 # Custom CSS styling for simplified message boxes and sidebar navigation
 st.markdown("""
     <style>
+    /* Dark mode styling */
+    @media (prefers-color-scheme: dark) {
+        .message-box {
+            border: 1px solid #555;
+            background-color: #333;
+            color: #f0f0f0;
+        }
+        .message-box.message-right {
+            background-color: #444;
+        }
+        .message-box.message-left {
+            background-color: #222;
+        }
+        .role-label {
+            color: #fff;
+        }
+    }
+    
     /* Sidebar styling: light gray background */
     [data-testid="stSidebar"] {
         background-color: #F5F5F5 !important;
@@ -132,6 +150,7 @@ with st.sidebar:
         1. Describe your business challenge in the input box.
         2. Answer follow-up questions as prompted.
         3. Review the expert conversation and meeting resolution.
+        4. Join the waitlist and give us feedback to improve it.
 
         **Product Vision**
 
