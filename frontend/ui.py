@@ -6,6 +6,7 @@ from backend.secretary import Secretary
 from backend.expert_manager import select_experts
 from backend.ai_processing import generate_expert_discussion, generate_extra_followup_response
 import logging
+import streamlit.components.v1 as components
 
 # Navigation logic - check session state to determine which page to display.
 if "page" not in st.session_state:
@@ -104,25 +105,20 @@ st.markdown("""
 # Top-right button section using st.columns for side-by-side buttons
 cols = st.columns(2)
 with cols[0]:
-    st.markdown("""
-    <div id="start-meeting-container" style="float:right;">
-    """, unsafe_allow_html=True)
     if st.button("Start New Meeting", key="start_new_meeting"):
-        logging.info("User clicked Start New Meeting")
         st.session_state.clear()
         try:
             st.experimental_rerun()
         except AttributeError:
             st.markdown("<script>window.location.reload();</script>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 with cols[1]:
-    st.markdown("""
-    <div id="waitlist-container" style="float:right;">
-    """, unsafe_allow_html=True)
     if st.button("Join Waitlist", key="waitlist_button"):
         logging.info("User clicked Join Waitlist")
-        st.markdown("<script>window.location.href='https://sites.google.com/view/summonexperts/home';</script>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+        components.html("""
+            <script>
+                window.location.href = "https://sites.google.com/view/summonexperts/home";
+            </script>
+        """, height=0)
 
 
 # Sidebar: "Join Waitlist" button at the very top, above the overview content.
