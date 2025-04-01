@@ -60,6 +60,7 @@ The experts present are: {', '.join(experts)}.
 First, determine whether the decision is strategic (long-term, high impact) or operational/tactical (short-term, execution-focused), and then simulate a sequential discussion where each expert states their individual, specialized perspective on the problem. 
 The experts debate potential strategies, just as in a real brainstorming meeting.
 Use real-world analogies, neutral comparisons, and "what-if" forecasts to highlight both risks and opportunities.
+Incorporate geographic details from the context into your analysis so that regional nuances enhance your recommendations.
 
 After the discussion, produce a final meeting conclusion in the following format:
 
