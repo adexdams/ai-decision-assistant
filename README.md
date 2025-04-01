@@ -24,10 +24,3 @@ Summons is an AI-powered decision-making partner designed for small business own
 
 - **Logging & Analytics:**  
   Basic logging is incorporated to track user actions and waitlist sign-ups, helping you analyze usage and performance.
-
-## Installation
-
-1. **Clone the Repository:**
-   ```bash
-   git clone <repository-url>
-   cd ai_decision_assistant
