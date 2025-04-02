@@ -7,7 +7,7 @@ Summons is an AI-powered decision-making partner designed for small business own
 - **Dynamic Context Gathering:**  
   The system, through its Secretary module, interactively collects essential information such as:
   - **Problem:** What is the challenge or contention?
-  - **Job Role:** What is your role in the situation?
+  - **Persona:** What is your role in the situation?
   - **Objective:** What do you want to achieve?
   - **Scenario:** How did the situation occur?
   - **Geography:** Where did the situation occur?
