@@ -24,19 +24,26 @@ class Secretary:
 
     def evaluate_context(self):
         """
-        Uses OpenAI to evaluate the current context.
-        Returns a list of missing essential fields. If all required fields are provided, returns an empty list.
+        First performs a local check of the essential fields (problem, persona, objective, scenario, constraints).
+        Then uses OpenAI to refine the missing fields, but returns only those that are still missing.
+        If all required fields are provided, returns an empty list.
         """
+        # Local check: collect fields that are missing or empty
+        local_missing = [field for field in self.required_fields if field not in self.context or not self.context[field].strip()]
+        if not local_missing:
+            return []
+        
+        # Use OpenAI to evaluate the context further
         prompt = f"""
-You are a business assistant evaluating if all essential information is provided.
-The essential fields are: Problem, Persona, Objective, Scenario, Geography, and Constraints.
-Here is the current context:
-{json.dumps(self.context, indent=2)}
-
-List any missing fields (if multiple, separate them with commas). If all required information is provided, reply with "DONE".
-"""
+    You are a business assistant evaluating if the provided context contains sufficient information for the following essential fields:
+    Problem, Persona, Objective, Scenario, and Constraints.
+    Here is the current context:
+    {json.dumps(self.context, indent=2)}
+    Based on this context, list any fields from the list that still require additional detail to be considered complete.
+    If all required fields are sufficiently provided, reply with "DONE".
+    """
         try:
-            response = client.chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=[{"role": "system", "content": prompt}]
             )
@@ -44,17 +51,15 @@ List any missing fields (if multiple, separate them with commas). If all require
             if answer.upper() == "DONE":
                 return []
             else:
-                # Split by commas and normalize field names
-                missing = [field.strip().lower() for field in answer.split(",") if field.strip()]
-                # Filter to only those in required_fields
-                return [field for field in missing if field in self.required_fields]
+                # Parse AI response into a list of missing fields
+                ai_missing = [field.strip().lower() for field in answer.split(",") if field.strip()]
+                # Only return the fields that are locally missing and also flagged by AI
+                missing = [field for field in local_missing if field in ai_missing]
+                # If AI doesn't flag any, fall back to local missing
+                return missing if missing else local_missing
         except Exception as e:
-            # Fallback: perform a simple check locally.
-            missing = []
-            for field in self.required_fields:
-                if field not in self.context or not self.context[field]:
-                    missing.append(field)
-            return missing
+            # Fallback to the local check if there's an error
+            return local_missing
 
     def generate_dynamic_followup_question(self, missing_field):
         """
