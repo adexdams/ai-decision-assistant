@@ -12,7 +12,7 @@ openai.api_key = OPENAI_API_KEY
 class Secretary:
     def __init__(self):
         # Essential fields we need for context
-        self.required_fields = ["problem", "persona", "objective", "scenario", "geography", "constraints"]
+        self.required_fields = ["problem", "objective", "scenario", "geography", "constraints"]
         # Initialize context as an empty dictionary
         self.context = {}
         # Count of dynamic context questions already asked overall
