@@ -245,6 +245,7 @@ def main():
                 experts = select_experts(response["context"])
                 meeting_intro = f"Entering meeting with: {', '.join(experts)}"
                 st.success(meeting_intro)
+                st.info("Meeting is happening and you will get the resolutions soon.")
 
                 # Generate the full expert discussion and meeting conclusion
                 discussion = generate_expert_discussion(response["context"], experts)
