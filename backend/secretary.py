@@ -24,27 +24,26 @@ class Secretary:
     def evaluate_context(self):
         """
         First performs a local check of the essential fields (problem, persona, objective, scenario, geography, constraints).
-        A threshold is used to determine if a provided answer is sufficient.
-        Then uses OpenAI to refine the missing fields, but returns only those that are still missing.
-        If all required fields are provided, returns an empty list.
+        A simple threshold is used to determine if a provided answer is sufficiently detailed.
+        Then uses OpenAI to refine the list of missing fields, returning only those that still require additional detail.
+        If all required fields are sufficiently provided, returns an empty list.
         """
-        # Define a simple threshold for minimal acceptable detail
-        threshold = 10  # characters
-        local_missing = []
-        for field in self.required_fields:
-            if field not in self.context or len(self.context[field].strip()) < threshold:
-                local_missing.append(field)
+        # Define a threshold for minimal acceptable detail
+        threshold = 15  # adjust as necessary
+        local_missing = [field for field in self.required_fields 
+                         if field not in self.context or len(self.context[field].strip()) < threshold]
         if not local_missing:
             return []
         
+        # Use OpenAI to further evaluate the current context
         prompt = f"""
-You are a business assistant evaluating if the provided context contains sufficient information for the following essential fields:
-Problem, Persona, Objective, Scenario, Geography, and Constraints.
-Here is the current context:
-{json.dumps(self.context, indent=2)}
-Based on this context, list any fields from the list that still require additional detail to be considered complete.
-If all required fields are sufficiently provided, reply with "DONE".
-"""
+    You are a business assistant evaluating if the provided context contains sufficient detail for the following essential fields:
+    Problem, Persona, Objective, Scenario, Geography, and Constraints.
+    Here is the current context:
+    {json.dumps(self.context, indent=2)}
+    Based on this context, list any fields that still require additional detail.
+    If all required fields are sufficiently provided, reply with "DONE".
+    """
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-4",
@@ -55,10 +54,12 @@ If all required fields are sufficiently provided, reply with "DONE".
                 return []
             else:
                 ai_missing = [field.strip().lower() for field in answer.split(",") if field.strip()]
-                # Only return fields that are both locally missing and flagged by AI
+                # Return only those fields that are both locally missing and flagged by AI;
+                # If none are flagged, fall back to the local missing fields.
                 missing = [field for field in local_missing if field in ai_missing]
                 return missing if missing else local_missing
         except Exception as e:
+            # Fallback to the local check if there's an error with the API.
             return local_missing
 
     def generate_dynamic_followup_question(self, missing_field):
