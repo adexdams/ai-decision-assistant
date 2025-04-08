@@ -35,13 +35,13 @@ class Secretary:
             return []
         
         prompt = f"""
-You are a business assistant evaluating if the provided context contains sufficient detail for these essential fields:
-Problem, Persona, Objective, Scenario, Geography, and Constraints.
-Here is the current context:
-{json.dumps(self.context, indent=2)}
-Based on this context, list any fields that still require additional detail.
-If all required fields are sufficiently provided, reply with "DONE".
-"""
+            You are a business assistant evaluating if the provided context contains sufficient detail for these essential fields:
+            Problem, Persona, Objective, Scenario, Geography, and Constraints.
+            Here is the current context:
+            {json.dumps(self.context, indent=2)}
+            Based on this context, list any fields that still require additional detail.
+            If all required fields are sufficiently provided, reply with "DONE".
+            """
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-4",
@@ -59,27 +59,27 @@ If all required fields are sufficiently provided, reply with "DONE".
             return local_missing
 
     def generate_dynamic_followup_question(self, missing_field):
+        """
+        Uses OpenAI to generate a dynamic follow-up question for a specific missing field.
+        The prompt includes the current answer for the field so the question can be rephrased naturally.
+        """
+        current_answer = self.context.get(missing_field, "No information provided")
+        prompt = f"""
+            You are a business doctor helping a small business owner understand their problem.
+            The essential information needed includes: Problem, Persona, Objective, Scenario, Geography, and Constraints.
+            The current information for "{missing_field}" is: "{current_answer}".
+            Ask a specific, clear follow-up question to gather additional detail for the field "{missing_field}".
+            If no further information is needed for this field, reply with "DONE".
             """
-            Uses OpenAI to generate a dynamic follow-up question for a specific missing field.
-            The prompt includes the current answer for the field so the question can be rephrased naturally.
-            """
-            current_answer = self.context.get(missing_field, "No information provided")
-            prompt = f"""
-    You are a business doctor helping a small business owner understand their problem.
-    The essential information needed includes: Problem, Persona, Objective, Scenario, Geography, and Constraints.
-    The current information for "{missing_field}" is: "{current_answer}".
-    Ask a specific, clear follow-up question to gather additional detail for the field "{missing_field}".
-    If no further information is needed for this field, reply with "DONE".
-    """
-            try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-4",
-                    messages=[{"role": "system", "content": prompt}]
-                )
-                question = response.choices[0].message.content.strip()
-                return question
-            except Exception as e:
-                return f"Could you please provide more details about your {missing_field}?"
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[{"role": "system", "content": prompt}]
+            )
+            question = response.choices[0].message.content.strip()
+            return question
+        except Exception as e:
+            return f"Could you please provide more details about your {missing_field}?"
 
 
     def analyze_input(self, user_input, field_being_answered=None):
