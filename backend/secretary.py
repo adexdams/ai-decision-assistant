@@ -86,14 +86,15 @@ If the answer provided so far is sufficient, reply with "DONE".
 
     def analyze_input(self, user_input, field_being_answered=None):
         """
-        Processes user input and updates the context dynamically.
-        If a specific field is being answered and it already contains data, appends the new input.
-        After updating the context, evaluates if all required fields are sufficiently complete.
-        Returns 'complete' if context is sufficient; otherwise, returns an 'incomplete' status along with a follow-up question.
+        Processes user input and updates context dynamically.
+        If a specific field is being answered and that field already has data, appends the new input.
+        Otherwise, treats the initial input as addressing the 'problem'.
+        Then evaluates the context. If any essential fields are missing, it generates a targeted follow-up
+        question for the first missing field. If all fields are sufficiently complete, returns complete.
         """
         if field_being_answered:
+            # If the field already has some content, append the new input.
             if field_being_answered in self.context and self.context[field_being_answered].strip():
-                # Append new input to the existing response for this field
                 self.context[field_being_answered] += " " + user_input.strip()
             else:
                 self.context[field_being_answered] = user_input.strip()
@@ -101,12 +102,13 @@ If the answer provided so far is sufficient, reply with "DONE".
             # For the initial input, assume it addresses the 'problem'
             if "problem" not in self.context:
                 self.context["problem"] = user_input.strip()
-
+    
+        # Evaluate the current context using our updated evaluation logic.
         missing_fields = self.evaluate_context()
         if not missing_fields:
             return {"status": "complete", "context": self.context}
         else:
-            # Only ask a follow-up if we haven't reached max follow-ups
+            # Only ask a follow-up if we haven't reached the maximum number allowed.
             if self.context_questions_asked < self.max_questions:
                 self.context_questions_asked += 1
                 field_id = missing_fields[0]
