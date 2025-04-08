@@ -16,31 +16,31 @@ class Secretary:
         self.required_fields = ["problem", "persona", "objective", "scenario", "geography", "constraints"]
         # Initialize context as an empty dictionary
         self.context = {}
-        # Count of dynamic context questions already asked
+        # Count of dynamic context questions overall
         self.context_questions_asked = 0
-        # Maximum number of follow-up questions to ask
+        # Maximum number of follow-up questions to ask overall
         self.max_questions = 3
+        # Track how many times each field has been asked
+        self.fields_asked = {}
 
     def evaluate_context(self):
         """
-        First performs a local check of the essential fields (problem, persona, objective, scenario, geography, constraints).
-        A simple character-length threshold is used to determine if a provided answer is sufficiently detailed.
-        Then uses OpenAI to refine the list of missing fields, returning only those that still require additional detail.
-        If all required fields are sufficiently provided, returns an empty list.
+        Performs a local check of the essential fields using a minimum character threshold.
+        Then uses OpenAI to refine the list of missing fields, returning only those that
+        still require more detail. If all required fields are provided, returns an empty list.
         """
-        threshold = 15  # Minimal number of characters considered sufficient for each field
+        threshold = 15  # Adjust this threshold as needed
         local_missing = [field for field in self.required_fields 
                          if field not in self.context or len(self.context[field].strip()) < threshold]
         if not local_missing:
             return []
-        
+
         prompt = f"""
-            You are a business assistant evaluating if the provided context contains sufficient detail for these essential fields:
+            You are a business assistant evaluating whether the context contains sufficient detail for these fields:
             Problem, Persona, Objective, Scenario, Geography, and Constraints.
-            Here is the current context:
+            Current context:
             {json.dumps(self.context, indent=2)}
-            Based on this context, list any fields that still require additional detail.
-            If all required fields are sufficiently provided, reply with "DONE".
+            List the fields that still require additional detail. If all fields have sufficient detail, reply with "DONE".
             """
         try:
             response = openai.ChatCompletion.create(
@@ -52,7 +52,7 @@ class Secretary:
                 return []
             else:
                 ai_missing = [field.strip().lower() for field in answer.split(",") if field.strip()]
-                # Only return fields that are both locally missing and flagged by AI.
+                # Only flag fields that are locally missing AND flagged by AI:
                 missing = [field for field in local_missing if field in ai_missing]
                 return missing if missing else local_missing
         except Exception as e:
@@ -60,16 +60,16 @@ class Secretary:
 
     def generate_dynamic_followup_question(self, missing_field):
         """
-        Uses OpenAI to generate a dynamic follow-up question for a specific missing field.
-        The prompt includes the current answer for the field so the question can be rephrased naturally.
+        Uses OpenAI to generate a dynamic follow-up question for the specified missing field.
+        Includes current content for that field so that the question can be naturally rephrased.
         """
         current_answer = self.context.get(missing_field, "No information provided")
         prompt = f"""
-            You are a business doctor helping a small business owner understand their problem.
-            The essential information needed includes: Problem, Persona, Objective, Scenario, Geography, and Constraints.
-            The current information for "{missing_field}" is: "{current_answer}".
-            Ask a specific, clear follow-up question to gather additional detail for the field "{missing_field}".
-            If no further information is needed for this field, reply with "DONE".
+            You are a business doctor helping a small business owner refine their information.
+            The essential details needed include: Problem, Persona, Objective, Scenario, Geography, and Constraints.
+            For the field "{missing_field}", the current answer is: "{current_answer}".
+            Please ask a specific, clear follow-up question to gather additional detail for "{missing_field}".
+            If no further information is needed, reply with "DONE".
             """
         try:
             response = openai.ChatCompletion.create(
@@ -81,41 +81,42 @@ class Secretary:
         except Exception as e:
             return f"Could you please provide more details about your {missing_field}?"
 
-
     def analyze_input(self, user_input, field_being_answered=None):
         """
-        Processes user input and updates the context dynamically.
-        If a specific field is being answered and it already contains some content,
-        appends the new input (separated by a space) to build a richer response.
-        The first input is treated as addressing the 'problem' field.
-        Then, after each input, the current context is re-evaluated.
-        If any essential fields are missing, a targeted follow-up question is generated.
-        If all essential fields are sufficiently complete, returns complete.
+        Processes user input and updates context dynamically.
+        If a field is already answered and the user is providing more input, append that input.
+        Then re-evaluate the context:
+          - If all required fields are complete, return complete.
+          - Otherwise, if a field is still missing and hasn't been asked before, ask for follow-up.
+          - It will only ask follow-up up to the maximum allowed questions.
         """
+        # Update the context
         if field_being_answered:
-            # Append new input if the field already has some content
             if field_being_answered in self.context and self.context[field_being_answered].strip():
                 self.context[field_being_answered] += " " + user_input.strip()
             else:
                 self.context[field_being_answered] = user_input.strip()
+            # Track follow-up count for this field
+            self.fields_asked[field_being_answered] = self.fields_asked.get(field_being_answered, 0) + 1
         else:
-            # For the initial input, assume it addresses "problem"
             if "problem" not in self.context:
                 self.context["problem"] = user_input.strip()
 
-        # Re-evaluate the current context.
+        # Evaluate the context
         missing_fields = self.evaluate_context()
-        if not missing_fields:
+        # Remove fields that have already been asked (and get enough detail)
+        filtered_missing = [field for field in missing_fields if self.fields_asked.get(field, 0) == 0]
+
+        if not filtered_missing:
             return {"status": "complete", "context": self.context}
         else:
             if self.context_questions_asked < self.max_questions:
                 self.context_questions_asked += 1
-                field_id = missing_fields[0]
+                field_id = filtered_missing[0]
                 question = self.generate_dynamic_followup_question(field_id)
                 if question.strip().upper() == "DONE":
                     return {"status": "complete", "context": self.context}
                 else:
                     return {"status": "incomplete", "question": question, "missing_field": field_id, "context": self.context}
             else:
-                # Maximum number of follow-up questions reached; consider context complete.
                 return {"status": "complete", "context": self.context}
