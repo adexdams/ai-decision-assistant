@@ -21,27 +21,27 @@ class Secretary:
         # Maximum number of follow-up questions to ask
         self.max_questions = 3
 
-    
     def evaluate_context(self):
         """
         First performs a local check of the essential fields (problem, persona, objective, scenario, geography, constraints).
-        A simple threshold is used to determine if a provided answer is sufficiently detailed.
-        Then uses OpenAI to refine the missing fields, returning only those that still require additional detail.
+        A simple character-length threshold is used to determine if a provided answer is sufficiently detailed.
+        Then uses OpenAI to refine the list of missing fields, returning only those that still require additional detail.
         If all required fields are sufficiently provided, returns an empty list.
         """
-        threshold = 15  # Minimal character count considered sufficient for a field's detail
+        threshold = 15  # Minimal number of characters considered sufficient for each field
         local_missing = [field for field in self.required_fields 
                          if field not in self.context or len(self.context[field].strip()) < threshold]
         if not local_missing:
             return []
         
         prompt = f"""
-    You are a business assistant evaluating if the provided context contains sufficient detail for these essential fields:
-    Problem, Persona, Objective, Scenario, Geography, and Constraints.
-    Here is the current context:
-    {json.dumps(self.context, indent=2)}
-    Based on this context, list any fields that still require additional detail. If all required fields are sufficiently provided, reply with "DONE".
-    """
+You are a business assistant evaluating if the provided context contains sufficient detail for these essential fields:
+Problem, Persona, Objective, Scenario, Geography, and Constraints.
+Here is the current context:
+{json.dumps(self.context, indent=2)}
+Based on this context, list any fields that still require additional detail.
+If all required fields are sufficiently provided, reply with "DONE".
+"""
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-4",
@@ -52,25 +52,22 @@ class Secretary:
                 return []
             else:
                 ai_missing = [field.strip().lower() for field in answer.split(",") if field.strip()]
-                # Return only fields that are locally missing and flagged by AI.
+                # Only return fields that are both locally missing and flagged by AI.
                 missing = [field for field in local_missing if field in ai_missing]
                 return missing if missing else local_missing
         except Exception as e:
             return local_missing
 
-
-        def generate_dynamic_followup_question(self, missing_field):
+    def generate_dynamic_followup_question(self, missing_field):
             """
             Uses OpenAI to generate a dynamic follow-up question for a specific missing field.
-            Acts as a business doctor asking one targeted question at a time.
-            Incorporate the current content for that field to rephrase the question naturally.
+            The prompt includes the current answer for the field so the question can be rephrased naturally.
             """
+            current_answer = self.context.get(missing_field, "No information provided")
             prompt = f"""
     You are a business doctor helping a small business owner understand their problem.
     The essential information needed includes: Problem, Persona, Objective, Scenario, Geography, and Constraints.
-    The current context is:
-    {json.dumps(self.context, indent=2)}
-    
+    The current information for "{missing_field}" is: "{current_answer}".
     Ask a specific, clear follow-up question to gather additional detail for the field "{missing_field}".
     If no further information is needed for this field, reply with "DONE".
     """
@@ -83,30 +80,30 @@ class Secretary:
                 return question
             except Exception as e:
                 return f"Could you please provide more details about your {missing_field}?"
-    
-    
+
+
     def analyze_input(self, user_input, field_being_answered=None):
         """
-        Processes user input and updates context dynamically.
-        If a specific field is being answered and it already has some content,
+        Processes user input and updates the context dynamically.
+        If a specific field is being answered and it already contains some content,
         appends the new input (separated by a space) to build a richer response.
         The first input is treated as addressing the 'problem' field.
-        Then, after each input, the current context is evaluated.
+        Then, after each input, the current context is re-evaluated.
         If any essential fields are missing, a targeted follow-up question is generated.
         If all essential fields are sufficiently complete, returns complete.
         """
         if field_being_answered:
-            # Append new input if the field already exists, otherwise set it.
+            # Append new input if the field already has some content
             if field_being_answered in self.context and self.context[field_being_answered].strip():
                 self.context[field_being_answered] += " " + user_input.strip()
             else:
                 self.context[field_being_answered] = user_input.strip()
         else:
-            # For the initial input, treat it as addressing "problem"
+            # For the initial input, assume it addresses "problem"
             if "problem" not in self.context:
                 self.context["problem"] = user_input.strip()
-        
-        # Evaluate current context using the updated logic.
+
+        # Re-evaluate the current context.
         missing_fields = self.evaluate_context()
         if not missing_fields:
             return {"status": "complete", "context": self.context}
@@ -120,4 +117,5 @@ class Secretary:
                 else:
                     return {"status": "incomplete", "question": question, "missing_field": field_id, "context": self.context}
             else:
+                # Maximum number of follow-up questions reached; consider context complete.
                 return {"status": "complete", "context": self.context}
