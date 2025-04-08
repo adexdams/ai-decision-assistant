@@ -21,6 +21,7 @@ class Secretary:
         # Maximum number of follow-up questions to ask
         self.max_questions = 3
 
+    
     def evaluate_context(self):
         """
         First performs a local check of the essential fields (problem, persona, objective, scenario, geography, constraints).
@@ -56,6 +57,33 @@ class Secretary:
                 return missing if missing else local_missing
         except Exception as e:
             return local_missing
+
+
+        def generate_dynamic_followup_question(self, missing_field):
+            """
+            Uses OpenAI to generate a dynamic follow-up question for a specific missing field.
+            Acts as a business doctor asking one targeted question at a time.
+            Incorporate the current content for that field to rephrase the question naturally.
+            """
+            prompt = f"""
+    You are a business doctor helping a small business owner understand their problem.
+    The essential information needed includes: Problem, Persona, Objective, Scenario, Geography, and Constraints.
+    The current context is:
+    {json.dumps(self.context, indent=2)}
+    
+    Ask a specific, clear follow-up question to gather additional detail for the field "{missing_field}".
+    If no further information is needed for this field, reply with "DONE".
+    """
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-4",
+                    messages=[{"role": "system", "content": prompt}]
+                )
+                question = response.choices[0].message.content.strip()
+                return question
+            except Exception as e:
+                return f"Could you please provide more details about your {missing_field}?"
+    
     
     def analyze_input(self, user_input, field_being_answered=None):
         """
