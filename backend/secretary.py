@@ -16,7 +16,7 @@ class Secretary:
         # User-friendly mapping for questions
         self.question_prompts = {
             "problem": "Could you please describe the business challenge you're facing?",
-            "persona": "Could you share more about your professional background and relevant experience?",
+            "persona": "Could you please describe your role or position in this situation?",
             "objective": "What is the main goal or vision you want to achieve with this project?",
             "scenario": "Can you explain the situation or context in which this project is taking place?",
             "geography": "Where will this project be executed (location, market, etc.)?",
