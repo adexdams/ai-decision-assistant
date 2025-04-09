@@ -73,8 +73,9 @@ Meeting Resolutions:
 Here are our analysis of each choice and the additional insights you need to help you make the best decision."
 
 For each of the three strategic choices, include:
-1. A brief description of the strategic option.
-2. A detailed assessment of the risks and rewards, including both the upside and the downside. Also mention what would need to happen for each option to fail.
+1. A description of the strategic option.
+2. A detailed assessment of the risks and rewards, including both the upside and the downside. Include evidentiary data and facts to support your assessment, 
+with links at the bottom (do not make any of the data up). Also, mention what would need to happen for each option to fail.
 3. A discussion of the leadership style required to execute this choice.
 4. A description of the value system and personality traits of a person who would choose this option (for example, risk-taking, conservative, community-oriented, religious, etc.).
 5. Draw a 2v2 decision quadrant table of impact vs risk for all strategic options.
