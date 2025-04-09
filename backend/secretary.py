@@ -15,7 +15,6 @@ class Secretary:
         self.required_fields = ["problem", "persona", "objective", "scenario", "geography", "constraints"]
         # User-friendly mapping for questions
         self.question_prompts = {
-            "problem": "Could you please describe the business challenge you're facing?",
             "persona": "Could you please describe your role or position in this situation?",
             "objective": "What is the main goal or vision you want to achieve with this project?",
             "scenario": "Can you explain the situation or context in which this project is taking place?",
@@ -27,7 +26,7 @@ class Secretary:
         # Count of dynamic context questions already asked overall
         self.context_questions_asked = 0
         # Maximum number of follow-up questions to ask overall
-        self.max_questions = 3
+        self.max_questions = 5
         # Track which fields have been asked (to avoid repetition)
         self.fields_asked = {}
         # Track which fields are complete
